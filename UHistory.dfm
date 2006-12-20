@@ -92,6 +92,7 @@ object fmHistory: TfmHistory
     end
   end
   object SaveDialog1: TSaveDialog
+    DefaultExt = 'txt'
     Filter = 'Text (*.txt)|*.txt|All (*.*)|*.*'
     Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofShareAware, ofEnableSizing]
     Left = 128

@@ -66,15 +66,39 @@ begin
 end;
 
 procedure TfmHistory.Save1Click(Sender: TObject);
+var
+   fname, tmp: String;
+   f: TextFile;
+   rowNum, colNum: Integer;
 begin
    if SaveDialog1.Execute then
-   begin
-{TODO: Collect and format data and stats for file output.
-Preferably in a format that can be input into Excel without too much trouble}
-      //Get file name
-      //Generate text file
-      //Apply generated text to file
-      //Save and close the file
+   begin {TODO: Collect and format data and stats for file output.
+                Preferably in a format that can be input into Excel without too much trouble}
+      fname := SaveDialog1.FileName; //full filename
+      try
+         AssignFile(f, fname);
+         Rewrite(f);
+         (*********************************************************************)
+         {
+            Text file layout: DateTime    Roll#   Die#   DieValue
+            An easy layout for running stats on in Excel
+         }
+         WriteLn(f,'DateTime'+#9+'Roll#'+#9+'Die#'+#9+'DieValue');
+         for rowNum:=1 to sg2.RowCount-2 do //for each row
+         begin
+            tmp := '';
+            for colNum:=1 to sg2.ColCount - 2 do //for each column (excluding datetime)
+               if sg2.Cells[colNum,rowNum] <> '' then
+                  tmp := tmp + sg2.Cells[0,rowNum] +#9+ IntToStr(rowNum) +#9+ IntToStr(colNum) +#9+ sg2.Cells[colNum,rowNum]+#13#10;
+            WriteLn(f,Trim(tmp));
+         end;
+         (*********************************************************************)
+         CloseFile(f);
+      except
+         on e: Exception do
+         begin
+         end;
+      end;
    end;
 end;
 
